@@ -1,15 +1,15 @@
 # Openshift Prometheus data to Splunk
 ## Using Prometheus remoteWrite and Telegraf to send data to Splunk HEC. for s390x architecture
 
-The Remote-Write protocol is designed to make it possible to reliably propagate samples in real-time from a sender to a receiver, without loss. 
+The Remote-Write protocol is designed to make it possible to reliably propagate samples in real-time from a sender to a receiver, without loss[^1]. 
 
 The Remote-Write protocol uses protocol buffers and snnapy.
 
-Protocol Buffers are language-neutral, platform-neutral extensible mechanisms for serializing structured data. 
+Protocol Buffers are language-neutral, platform-neutral extensible mechanisms for serializing structured data[^2]. 
 
-Snappy is a compression/decompression library. It does not aim for maximum compression, or compatibility with any other compression library; instead, it aims for very high speeds and reasonable compression.
+Snappy is a compression/decompression library. It does not aim for maximum compression, or compatibility with any other compression library; instead, it aims for very high speeds and reasonable compression[^3].
 
-Telegraf collects and sends time series data from databases, systems, and IoT sensors. It has no external dependencies, is easy to install, and requires minimal hardware resources.
+Telegraf collects and sends time series data from databases, systems, and IoT sensors. It has no external dependencies, is easy to install, and requires minimal hardware resources[^4].
 
 Almost every product for metric/data collection works in 3 stages
 | --> Input  | Proccesing --> | Output --> |
@@ -22,7 +22,8 @@ Evaluation of 3 known technologies
 | :------- | :---------------: | :-----------: | :--------------: | :----: |
 | LogStash | False | False | True | ❌ |
 | Vektor | True | True | True | ❌ |
-| Telegraf | True | True | True | ✅ s/c |
+| Telegraf | True | True | True | ✅ |
+| OpenTelemetry| True | True | True | ✅ |
 
 
 ## Configure Prometeus and Telegraf
@@ -104,7 +105,7 @@ FIELDS:
   ```
 
 ## Secure components
-### Securing service traffic using service serving certificate secrets
+### Securing service traffic using service serving certificate secrets[^5]
 
 We are usign Telegraf as kubernetes service, we will use OpenShift to secure service traffic using ```service.beta.openshift.io/serving-cert-secret-name: true``` annotation.
 
@@ -170,8 +171,8 @@ This will create a secret with the certificate and the key, and the configMap wi
 ```
 
 Bibliografy
-https://prometheus.io/docs/specs/remote_write_spec/
-https://protobuf.dev/
-https://github.com/google/snappy
-https://www.influxdata.com/time-series-platform/telegraf/
-https://docs.openshift.com/container-platform/4.16/security/certificates/service-serving-certificate.html
+[^1]:https://prometheus.io/docs/specs/remote_write_spec/
+[^2]:https://protobuf.dev/
+[^3]:https://github.com/google/snappy
+[^4]:https://www.influxdata.com/time-series-platform/telegraf/
+[^5]:https://docs.openshift.com/container-platform/4.16/security/certificates/service-serving-certificate.html
