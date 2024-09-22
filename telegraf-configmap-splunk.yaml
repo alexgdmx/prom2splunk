@@ -1,0 +1,58 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: telegraf-config
+  namespace: openshift-monitoring
+data:
+  telegraf.conf: |+
+    [global_tags]
+      index = "openshift-metrics"
+      cluster = "sno.openshift.training"
+      sourcetype = "prometheus"
+    [agent]
+      interval = "10s"
+      round_interval = true
+      metric_batch_size = 500
+      metric_buffer_limit = 600000
+      collection_jitter = "0s"
+      flush_interval = "30s"
+      flush_jitter = "0s"
+      precision = ""
+      hostname = "openshift.training"
+      omit_hostname = false
+      
+    [[inputs.http_listener_v2]]
+      service_address = ":1234"
+      paths = ["/receive"]
+      data_format = "prometheusremotewrite"
+      # tls_allowed_cacerts = ["/etc/telegraf/ca/service-ca.crt"]
+      tls_cert = "/etc/telegraf/tls/tls.crt"
+      tls_key = "/etc/telegraf/tls/tls.key"
+
+  
+    [[processors.starlark]]
+      source = '''
+    def apply(metric):
+      if metric.name == "prometheus_remote_write":
+        for k, v in metric.fields.items():
+          # metric.name = k
+          metric.name = 'prometheus'
+          # metric.fields["value"] = v
+          # metric.fields.pop(k)
+      return metric
+    '''
+
+    [[outputs.http]]
+      url = "$SPLUNK_URL"
+      data_format = "splunkmetric"
+      splunkmetric_hec_routing = true
+      # splunkmetric_multimetric = true
+      # splunkmetric_omit_event_tag = true
+      [outputs.http.headers]
+        Content-Type = "application/json"
+        Authorization = "Splunk $SPLUNK_TOKEN"
+
+    # [[outputs.file]]
+    #   files = ["stdout"]
+    #   data_format = "json"
+    #   json_timestamp_units = "1s"

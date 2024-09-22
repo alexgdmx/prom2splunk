@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/instance: monitoring
+  name: cluster-monitoring-config
+  namespace: openshift-monitoring
+data:
+  config.yaml: |
+    alertmanagerMain:
+      retention: 7d
+    prometheusK8s:
+      externalLabels:
+        agent_location: sno.openshift.training
+        environment: Production
+        event: metric
+        source: metrics
+        # sourcetype: perflog
+      retention: 7d
+      remoteWrite:
+        - url: "https://telegraf.openshift-monitoring.svc:1234/receive"
+          tlsConfig:
+            ca:
+              configMap:
+                name: telegraf-ca-cert
+                key: service-ca.crt
+            cert:
+              secret:
+                name: telegraf-service-tls 
+                key: tls.crt 
+            keySecret:
+              name: telegraf-service-tls 
+              key: tls.key
