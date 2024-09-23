@@ -22,7 +22,7 @@ Evaluation of 3 known technologies
 | :------- | :---------------: | :-----------: | :--------------: | :----: |
 | LogStash | False | False | True | ❌ |
 | Vektor | True | True | True | ❌ |
-| Telegraf | True | True | True | ✅ |
+| Telegraf | True | True | True | ✅ s/c |
 | OpenTelemetry| True | True | True | ✅ |
 
 
@@ -170,7 +170,13 @@ This will create a secret with the certificate and the key, and the configMap wi
 
 ```
 
-Bibliografy
+#### Bibliografy
+[OpenShift remoreWrite](https://docs.openshift.com/container-platform/4.16/observability/monitoring/configuring-the-monitoring-stack.html#configuring-remote-write-storage_configuring-the-monitoring-stac)
+[Telegraf](https://github.com/influxdata/telegraf)
+[OpenShift service certificates](https://docs.openshift.com/container-platform/4.16/security/certificates/service-serving-certificate.html)
+[Vector](https://github.com/vectordotdev/vector/tree/master)
+[Prometheus](https://prometheus.io/docs/specs/remote_write_spec/)
+
 [^1]:https://prometheus.io/docs/specs/remote_write_spec/
 [^2]:https://protobuf.dev/
 [^3]:https://github.com/google/snappy
